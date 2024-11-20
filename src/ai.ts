@@ -3,7 +3,7 @@ const fs = require('fs');
 
 (async () => {
   try {
-    const text = fs.readFileSync('data.txt', 'utf-8');
+    const text = fs.readFileSync('./src/data.txt', 'utf-8');
     const url = 'http://127.0.0.1:11434/api/chat';
     const headers = {
       'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ const fs = require('fs');
     ];
 
     const data = {
-      model: 'llama3.2-vision:latest',
+      model: 'llama3.2-vision:latest', //'llama3.2-vision:latest'
       messages: chatHistory,
     };
 
@@ -35,14 +35,14 @@ const fs = require('fs');
     const response = await axios.post(url, data, { headers, timeout: 260000 });
 
     console.log('Response status:', response.status);
-    console.log('Response data:', response.data);
+    //console.log('Response data:', response.data);
 
     const jsonObjects = response.data.split('\n');
     let fullContent = jsonObjects
         .map(item => {
             item = item.trim();
             if (!item) return ''; 
-
+//
             try {
                 const parsed = JSON.parse(item);
                 return parsed.message ? parsed.message.content : ''; 
@@ -52,7 +52,7 @@ const fs = require('fs');
             }
         })
         .join('');
-
+//
     console.log('Parsed content:', fullContent); 
 
   } catch (error) {

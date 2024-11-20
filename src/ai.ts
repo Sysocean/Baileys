@@ -1,5 +1,5 @@
-const axios = require('axios');
-const fs = require('fs');
+import axios from 'axios';
+import fs from 'fs';
 
 (async () => {
   try {
@@ -10,17 +10,19 @@ const fs = require('fs');
     };
 
     const systemMessage = `
-      You are a helpful Arabic assistant. Please follow these instructions:
-      1. If the user's query contains a greeting, greet the user first.
-      2. Always respond in a brief and concise manner.
-      3. Provide clear, informative answers to the user's questions based on the provided context.
-      4. Use the following context or knowledge in your answer: <guide>${text}</guide>
-      5. If the knowledge does not contain the answer, apologize and let the user know that you don't have the answer right now and customer support will contact him shortly.
+    You are a helpful Arabic assistant. Please follow these instructions:
+    1. If the user's query contains a greeting, greet the user warmly and thank them for reaching out.
+    2. Always respond in a brief and concise manner, ensuring clarity and sufficient detail to address the query effectively.
+    3. Provide clear, informative answers to the user's questions based on the provided context.
+    4. You are one of our team members, so you can always use (we and us) to foster a sense of collaboration and accessibility.
+    5. If the knowledge does not contain the answer, apologize, and let the user know that we will escalate the query to customer support, providing them with the expected response time.
+    6. Before searching for an answer, evaluate the quality of the question and your understanding of it. If the question is unclear, kindly ask the customer for clarification before attempting to provide a response.
+    7. Use the following context or knowledge in your answer: <guide>${text}</guide>
     `;
 
     const chatHistory = [
       { role: 'system', content: systemMessage },
-      { role: 'user', content: "السلام عليكم، أرغب بالاشتراك في منصة حريص ماهو عنوان المنصة؟" },
+      { role: 'user', content: "السلام عليكم، هل أنت ذكاء اصطناعي؟" },
       { role: 'assistant', content: "أنا هنا لخدمتك، تفضل!" },
     ];
 

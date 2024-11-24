@@ -1,0 +1,208 @@
+{
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3A0901CCC24111595DB9"
+  },
+  "messageTimestamp": 1732212937,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "conversation": "بسم الله",
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "Q5xVumJ0eE5mLDJa6kf3V6PHP+GEgkS1PI2/clG6cOo="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}
+> {
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3AEFF609CC8F31FA46D9"
+  },
+  "messageTimestamp": 1732212953,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "locationMessage": {
+      "degreesLatitude": 24.84505271911621,
+      "degreesLongitude": 46.780128479003906,
+      "jpegThumbnail": "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"
+    },
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "W4a8c4ySjHz3h3d14e6IffiWs61CpI7mBey6pzmghuU="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}
+{
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3AD0F832796CC673E553"
+  },
+  "messageTimestamp": 1732212966,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "stickerMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.15575-24/30258730_1753676732148831_6044717310259820261_n.enc?ccb=11-4&oh=01_Q5AaIFdKaaU3WphhdKzQ580N5ZBQAcf6z6H2YUZrn8PbGjXz&oe=6766E495&_nc_sid=5e03e0&mms3=true",
+      "fileSha256": "9gzSemgOFB5WIOKxy4AZdTCEp0RSGnu4jrwhNpe9o2M=",
+      "fileEncSha256": "2+ifcAZ7UCrTRO1hW5aXs9Dso7R6XHIAFa2YflqgITM=",
+      "mediaKey": "UDyKbDNoudn7WUGPnSiELCg+g94ZcYR5Sgyf/m8hEZQ=",
+      "mimetype": "image/webp",
+      "directPath": "/v/t62.15575-24/30258730_1753676732148831_6044717310259820261_n.enc?ccb=11-4&oh=01_Q5AaIFdKaaU3WphhdKzQ580N5ZBQAcf6z6H2YUZrn8PbGjXz&oe=6766E495&_nc_sid=5e03e0",        
+      "fileLength": "35676",
+      "mediaKeyTimestamp": "1732212964",
+      "isAnimated": false,
+      "stickerSentTs": "1732212964189",
+      "isAvatar": false,
+      "isAiSticker": false,
+      "isLottie": false
+    },
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "WnMdjOO+hdwUj9ob3Qspn7xim+ocpa9vPmMBe90HF0k="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}
+{
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3AB8E02007FC85CE9404"
+  },
+  "messageTimestamp": 1732212995,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "extendedTextMessage": {
+      "text": "Https://hries.com",
+      "matchedText": "Https://hries.com",
+      "canonicalUrl": "https://www.hries.com/",
+      "description": "ابسط منصة لاصدار الفواتير الضريبية والاشعارات الضريبية والتقارير الضريبية. بالاضافة إلى خدمات الفروع والمخزون ونقاط البيع وغيرها.",
+      "title": "منصة حريص للفواتير الضريبية وإدارة الموارد",
+      "font": "SYSTEM",
+      "previewType": "NONE",
+      "thumbnailDirectPath": "",
+      "thumbnailSha256": "",
+      "inviteLinkGroupTypeV2": "DEFAULT"
+    },
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "wkqdJAAMDTDRX88vX/JgQtzaiLTrA7qU0Dy3qyOBePQ="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}
+{
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3AE5D1AB1218485E4E18"
+  },
+  "messageTimestamp": 1732213008,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "imageMessage": {
+      "url": "https://mmg.whatsapp.net/o1/v/t62.7118-24/f1/m232/up-oil-image-5bd86802-2539-4a6c-b53f-ebea4f3cde81?ccb=9-4&oh=01_Q5AaIIFDOzn9_FcXG4J6WLNO1hnY4pL5gTbc8CLjhkjlcU2W&oe=6766E958&_nc_sid=e6ed6c&mms3=true",
+      "mimetype": "image/jpeg",
+      "fileSha256": "4hNWfwAxnyr7/qALcFJ7oc/9c7lLO+K+K5lYL0Y03zs=",
+      "fileLength": "184108",
+      "height": 1600,
+      "width": 900,
+      "mediaKey": "+FrjSB6LBcuOIfDe1fpiAYVcTn8hQOwy1LkX6ASUs2I=",
+      "fileEncSha256": "CD6T2OLRx8eC+8MUIDVllKek5yECWmOneiX7F3d8QHw=",
+      "directPath": "/o1/v/t62.7118-24/f1/m232/up-oil-image-5bd86802-2539-4a6c-b53f-ebea4f3cde81?ccb=9-4&oh=01_Q5AaIIFDOzn9_FcXG4J6WLNO1hnY4pL5gTbc8CLjhkjlcU2W&oe=6766E958&_nc_sid=e6ed6c", 
+      "mediaKeyTimestamp": "1732213006",
+      "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wgARCABIAEgDASIAAhEBAxEB/8QAGgABAAMBAQEAAAAAAAAAAAAAAAECBAUDBv/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAAA9N/P7WdYI3+Rl2RBonLY0PMcTt8PuEVsiK3FfXzsXQPn+98vts7TkWXqOdY6TBc2sg+biYsRIgCBALwKBAECAf/EABQRAQAAAAAAAAAAAAAAAAAAAED/2gAIAQIBAT8AT//EABYRAAMAAAAAAAAAAAAAAAAAAAEgQP/aAAgBAwEBPwBRJ//EAC4QAAICAQIFAQUJAAAAAAAAAAECAAMRBAUSITFBUXEQIyRCYRMUIjIzNEBDgf/aAAgBAQABPwDYP1bPSaxBZcjCzgZOhi6cs9jm/NrLgHHSaSu3TAItqEE5PkyyrU2K6cVdit0J6iaRBRpkrLAkCcS+RMjzMzYT79/SGtWOSM5n2VY54gGm+mfrBXSGyG5+s+71Ho5z6xdKgYEOTj6yygt0cjlKq+DuTNjPxLekZyCRgmG3lzUz3ZBJSKK+y4nDSTyHWItVbHhPOAgjI9myH4s+kZmBOFzDYcfkgfkcrAwbquIHQnGJmsE+YGQAYOBMzZf3n+RuPP4cYmbPAgd84KQue6GB8/IZwjxOBfHs0976e0WJ1EG9Xd0WDe371iDfPNUG+J3qMG9Ud0YQbxpj14hBuulPzkQblpT/AGj+Z//+AAMA/9k=",
+      "firstScanSidecar": "RCgSkny7gBOeSQ==",
+      "firstScanLength": 11529,
+      "scansSidecar": "RCgSkny7gBOeSR/WnHvZrEXGIr9HF7FM+8JycS3Gv5FgRr6awMkbMw==",
+      "scanLengths": [
+        11529,
+        41973,
+        45868,
+        84736
+      ],
+      "midQualityFileSha256": "sNERXfrrhFRJVILSYXByPglvQ24pnbG6cEaZA9cwqkI="
+    },
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "i4GvrjGXDVzJA3j6OClwvMuAAU0ItVEE+suTB4NIaoo="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}
+{
+  "key": {
+    "remoteJid": "966503889883@s.whatsapp.net",
+    "fromMe": false,
+    "id": "3A3E8D587C3C4036C8E2"
+  },
+  "messageTimestamp": 1732213018,
+  "pushName": "نايف الحربي",
+  "broadcast": false,
+  "message": {
+    "audioMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7117-24/34815800_1094968375457154_3235677405967774595_n.enc?ccb=11-4&oh=01_Q5AaINAyhLPH4biibxxwSnAeKFNOz3FGudPnHFWCWGiVrVTO&oe=6766D29C&_nc_sid=5e03e0&mms3=true",
+      "mimetype": "audio/ogg; codecs=opus",
+      "fileSha256": "hEUSOZQYU6d7kfGG8xwUuxMuRNx0we8bOpAE0sB+gZc=",
+      "fileLength": "4081",
+      "seconds": 1,
+      "ptt": true,
+      "mediaKey": "6B1f2anBzkcV4Y2ymUpDDfFYQoAsaewXnqprO+NfYOw=",
+      "fileEncSha256": "i3y/7BE2z7LMkcn6iHQm8e3i5muOYc/01XcWclqJayw=",
+      "directPath": "/v/t62.7117-24/34815800_1094968375457154_3235677405967774595_n.enc?ccb=11-4&oh=01_Q5AaINAyhLPH4biibxxwSnAeKFNOz3FGudPnHFWCWGiVrVTO&oe=6766D29C&_nc_sid=5e03e0",
+      "mediaKeyTimestamp": "1732213015",
+      "streamingSidecar": "R8gcoE2XNW+faw==",
+      "waveform": "AAAAAAAAAAQJDhMYHCAeHBsaGBcXGBgYGRkaGxwcHh8fHBwbGRgWFBIQDw0LCwsLCwsLCgkIBwYFBAQEAwMDAw=="
+    },
+    "messageContextInfo": {
+      "deviceListMetadata": {
+        "senderKeyHash": "9T9CbMezftK9fA==",
+        "senderTimestamp": "1732028506",
+        "recipientKeyHash": "6BwMxCEsz2aOJQ==",
+        "recipientTimestamp": "1732124106"
+      },
+      "deviceListMetadataVersion": 2,
+      "messageSecret": "upUbpk0CEeT5QntaV+Eb+w86uUZieMIgwGHq2Yi7pW0="
+    }
+  },
+  "verifiedBizName": "نايف الحربي"
+}

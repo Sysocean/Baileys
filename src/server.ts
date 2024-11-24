@@ -1,7 +1,7 @@
 import { Boom } from '@hapi/boom'
 import NodeCache from 'node-cache'
 import readline from 'readline'
-import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, downloadAndProcessHistorySyncNotification, encodeWAM, fetchLatestBaileysVersion, getAggregateVotesInPollMessage, getHistoryMsg, isJidNewsletter, makeCacheableSignalKeyStore, makeInMemoryStore, proto, useMultiFileAuthState, WAMessageContent, WAMessageKey } from '../src'
+import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, downloadAndProcessHistorySyncNotification, encodeWAM, fetchLatestBaileysVersion, getAggregateVotesInPollMessage, getHistoryMsg, isJidUser, makeCacheableSignalKeyStore, makeInMemoryStore, proto, useMultiFileAuthState, WAMessageContent, WAMessageKey } from '../src'
 //import MAIN_LOGGER from '../src/Utils/logger'
 import open from 'open'
 import fs from 'fs'
@@ -44,7 +44,7 @@ const startSock = async() => {
 	const { state, saveCreds } = await useMultiFileAuthState('baileys_auth_info')
 	// fetch latest version of WA Web
 	const { version, isLatest } = await fetchLatestBaileysVersion()
-	console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
+	console.log(`using Alhar6i WA v${version.join('.')}, isLatest: ${isLatest}`)
 
 	const sock = makeWASocket({
 		version,
@@ -229,7 +229,7 @@ const startSock = async() => {
 							}
 						}
 
-						if(!msg.key.fromMe && doReplies && !isJidNewsletter(msg.key?.remoteJid!)) {
+						if(!msg.key.fromMe && doReplies && isJidUser(msg.key?.remoteJid!)) {
 
 							    // Initialize the message queue for the user if not already present
 							if (!userMessageQueue[msg.key?.remoteJid!]) {
@@ -244,6 +244,8 @@ const startSock = async() => {
 								clearTimeout(userTimeouts[msg.key?.remoteJid!]);
 							}
 
+							//console.log(JSON.stringify(msg, undefined, 2))
+							
 							// Set a new timeout to process the messages after the delay
 							userTimeouts[msg.key?.remoteJid!] = setTimeout(async () => {
 								// Collect all messages for this user
@@ -253,8 +255,11 @@ const startSock = async() => {
 								delete userMessageQueue[msg.key?.remoteJid!];
 								delete userTimeouts[msg.key?.remoteJid!];
 								
+
 								// The POST and send here
 								(async () => {
+									
+
 									//console.log('replying to', msg.key.remoteJid)
 									await sock!.readMessages([msg.key])
 	
@@ -266,14 +271,13 @@ const startSock = async() => {
 									  };
 								  
 									  const systemMessage = `
-									  You are a helpful Arabic assistant. Please follow these instructions:
-									  1. If the user's query contains a greeting, greet the user warmly and thank them for reaching out.
-									  2. Always respond in a brief and concise manner, ensuring clarity and sufficient detail to address the query effectively.
-									  3. Provide clear, informative answers to the user's questions based on the provided context.
-									  4. You are one of our team members, so you can always use (we and us) to foster a sense of collaboration and accessibility.
-									  5. If the knowledge does not contain the answer, apologize, and let the user know that we will escalate the query to customer support, providing them with the expected response time.
-									  6. Before searching for an answer, evaluate the quality of the question and your understanding of it. If the question is unclear, kindly ask the customer for clarification before attempting to provide a response.
-									  7. Use the following context or knowledge in your answer: <guide>${text}</guide>
+You are a helpful Arabic assistant. Please follow these instructions:
+1. If the user's query contains a greeting, start your response by greeting the user warmly and thank them for reaching out.
+2. Ensure the question is clear, complete, and well-understood before searching for an answer. If the question lacks clarity or completeness, politely ask the customer for clarification before proceeding.
+3. If the knowledge does not contain the answer, apologize, and let the user know that you will escalate the query to customer support.
+4. In your answers, always, respond in a brief and concise manner, ensuring clarity and sufficient detail, based on the provided context, to address the query effectively.
+5. You are one of our team members, so you can always use (we and us) to foster a sense of collaboration and accessibility.
+6. Use the following knowledge in your answer: <guide>${text}</guide>.
 									  `;
 								  
 									  const chatHistory = [
@@ -315,7 +319,10 @@ const startSock = async() => {
 								  //
 									  //console.log('Parsed content:', fullContent); 
 									  await sendMessageWTyping({ text: fullContent }, msg.key.remoteJid!)
-								  
+									  const senderMobile = msg.key.remoteJid!.split('@')[0]
+									  const whatsappJID = msg.key.remoteJid!.split('@')[1]
+									  await sendMessageWTyping({ text: 'السؤال: ' + messagesToSend + '\nالجواب: ' + fullContent + '\n' +   senderMobile }, '966503889883@' + whatsappJID)
+
 									} catch (error) {
 									  console.error('Error:', error.message);
 									  if (error.response) {
@@ -325,6 +332,8 @@ const startSock = async() => {
 								  })();		
 			
 							}, DELAY_TIME);
+
+							
 						}
 					}
 				}

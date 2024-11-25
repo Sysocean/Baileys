@@ -28,7 +28,8 @@
   "scripts": {
     "build:all": "tsc && typedoc",
     "build:docs": "typedoc",
-    "build:tsc": "tsc",
+    "build:tsc": "tsc && copy src\\data.txt lib\\",
+    "dockerbuild:tsc": "tsc && cp src/data.txt lib/ && rm -rf src",
     "changelog:last": "conventional-changelog -p angular -r 2",
     "changelog:preview": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
@@ -56,6 +57,7 @@
     "libphonenumber-js": "^1.10.20",
     "libsignal": "github:WhiskeySockets/libsignal-node",
     "lodash": "^4.17.21",
+    "long": "^5.2.3",
     "music-metadata": "^7.12.3",
     "node-cache": "^5.1.2",
     "pino": "^7.0.0",
@@ -72,7 +74,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "eslint": "^8.0.0",
     "jest": "^27.0.6",
-    "jimp": "^0.16.1",
+    "jimp": "0.16.1",
     "json": "^11.0.0",
     "link-preview-js": "^3.0.0",
     "open": "^8.4.2",
@@ -85,7 +87,6 @@
     "typescript": "^4.6.4"
   },
   "peerDependencies": {
-    "jimp": "^0.16.1",
     "link-preview-js": "^3.0.0",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.32.6"

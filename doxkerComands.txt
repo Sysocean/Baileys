@@ -1,0 +1,10 @@
+docker ps -a
+docker images
+docker build . -t bailyesforhries:latest --progress=plain
+docker run -it --network host --name hries alhar6i
+
+docker ps -a
+docker stop hries
+docker rm hries
+docker images
+docker rmi alhar6i

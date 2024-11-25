@@ -1,12 +1,13 @@
 import { Boom } from '@hapi/boom'
 import NodeCache from 'node-cache'
 import readline from 'readline'
-import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, downloadAndProcessHistorySyncNotification, encodeWAM, fetchLatestBaileysVersion, getAggregateVotesInPollMessage, getHistoryMsg, isJidUser, makeCacheableSignalKeyStore, makeInMemoryStore, proto, useMultiFileAuthState, WAMessageContent, WAMessageKey } from '../src'
+import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, downloadAndProcessHistorySyncNotification, encodeWAM, fetchLatestBaileysVersion, getAggregateVotesInPollMessage, getHistoryMsg, isJidUser, makeCacheableSignalKeyStore, makeInMemoryStore, proto, useMultiFileAuthState, WAMessageContent, WAMessageKey } from './'
 //import MAIN_LOGGER from '../src/Utils/logger'
 import open from 'open'
 import fs from 'fs'
 import P from 'pino'
 import axios from 'axios';
+import { resolve } from 'path';
 
 const userMessageQueue = {};
 const userTimeouts = {};
@@ -33,18 +34,18 @@ const question = (text: string) => new Promise<string>((resolve) => rl.question(
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
-store?.readFromFile('./baileys_store_multi.json')
+store?.readFromFile('./alhar6i_store_multi.json')
 // save every 10s
 setInterval(() => {
-	store?.writeToFile('./baileys_store_multi.json')
+	store?.writeToFile('./alhar6i_store_multi.json')
 }, 10_000)
 
 // start a connection
 const startSock = async() => {
-	const { state, saveCreds } = await useMultiFileAuthState('baileys_auth_info')
+	const { state, saveCreds } = await useMultiFileAuthState('./alhar6i_auth_info')
 	// fetch latest version of WA Web
 	const { version, isLatest } = await fetchLatestBaileysVersion()
-	console.log(`using Alhar6i WA v${version.join('.')}, isLatest: ${isLatest}`)
+	console.log(`Using Alhar6i WA v${version.join('.')}, isLatest: ${isLatest}`)
 
 	const sock = makeWASocket({
 		version,
@@ -65,6 +66,7 @@ const startSock = async() => {
 	})
 
 	store?.bind(sock.ev)
+
 
 	// Pairing code for Web clients
 	if (usePairingCode && !sock.authState.creds.registered) {
@@ -121,7 +123,7 @@ const startSock = async() => {
 							eventSequenceNumber,
 						},
 						events,
-					} = JSON.parse(await fs.promises.readFile("./boot_analytics_test.json", "utf-8"))
+					} = JSON.parse(await fs.promises.readFile("boot_analytics_test.json", "utf-8"))
 
 					const binaryInfo = new BinaryInfo({
 						protocolVersion: wamVersion,
@@ -264,7 +266,12 @@ const startSock = async() => {
 									await sock!.readMessages([msg.key])
 	
 									try {
-									  const text = fs.readFileSync('./src/data.txt', 'utf-8');
+
+									  
+									  // Resolve the path dynamically based on the current file's directory
+									  const filePath = resolve(__dirname, 'data.txt');
+
+									  const text = fs.readFileSync(filePath, 'utf-8');
 									  const url = 'http://127.0.0.1:11434/api/chat';
 									  const headers = {
 										'Content-Type': 'application/json',

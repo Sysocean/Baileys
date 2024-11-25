@@ -4,8 +4,8 @@
 *.tgz
 */.DS_Store
 auth_info*.json
-baileys_auth_info*
-baileys_store*.json
+alhar6i_auth_info*
+alhar6i_store*.json
 browser-messages.json
 browser-token.json
 decoded-ws.json

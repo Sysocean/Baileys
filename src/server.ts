@@ -4,7 +4,7 @@ import readline from 'readline'
 import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, downloadAndProcessHistorySyncNotification, encodeWAM, fetchLatestBaileysVersion, getAggregateVotesInPollMessage, getHistoryMsg, isJidUser, makeCacheableSignalKeyStore, makeInMemoryStore, proto, useMultiFileAuthState, WAMessageContent, WAMessageKey } from './'
 //import MAIN_LOGGER from '../src/Utils/logger'
 import open from 'open'
-import fs from 'fs'
+import fs, { existsSync, unlinkSync, rmSync } from 'fs'
 import P from 'pino'
 import axios from 'axios';
 import { resolve } from 'path';
@@ -12,7 +12,6 @@ import { resolve } from 'path';
 const userMessageQueue = {};
 const userTimeouts = {};
 const DELAY_TIME = 10000; // 10 seconds
-
 
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./wa-logs.txt'))
 logger.level = 'trace'
@@ -103,7 +102,8 @@ const startSock = async() => {
 					if((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
 						startSock()
 					} else {
-						console.log('Connection closed. You are logged out.')
+						deleteStoreAndAuth()
+						console.log('You are logged out.\nYou can run the app next time if you which to use the AI service!')
 					}
 				}
 				
@@ -272,58 +272,103 @@ const startSock = async() => {
 									  const filePath = resolve(__dirname, 'data.txt');
 
 									  const text = fs.readFileSync(filePath, 'utf-8');
-									  const url = 'http://127.0.0.1:11434/api/chat';
+									  const url = 'http://127.0.0.1:11434/api/generate' //'http://127.0.0.1:11434/api/chat';
 									  const headers = {
 										'Content-Type': 'application/json',
 									  };
 								  
-									  const systemMessage = `
-You are a helpful Arabic assistant. Please follow these instructions:
-1. If the user's query contains a greeting, start your response by greeting the user and thank them for reaching out.
-2. Ensure the question is clear, complete, and well-understood before searching for an answer. If the question lacks clarity or completeness, politely tell the user that you didn't get the point of the message and ask the user for clarification before proceeding.
-3. If the knowledge does not contain the answer, apologize, and let the user know that you will escalate the query to customer support.
-4. In your answers, always, respond in a brief and concise manner, ensuring clarity and sufficient detail based on the provided context to address the query effectively.
-5. You are one of our team members, so always use (we and us) to foster a sense of collaboration and accessibility.
-6. Use the following knowledge in your answer: <guide>${text}</guide>.
-									  `;
-								  
-									  const chatHistory = [
+//									  const systemMessage = `
+									//You are a helpful Arabic assistant. Please follow these instructions:
+									//1. If the user's query contains a greeting, start your response by greeting the user and thank them for reaching out.
+									//2. Ensure the question is clear, complete, and well-understood before searching for an answer. If the question lacks clarity or completeness, politely tell the user that you didn't get the point of the message and ask the user for clarification before proceeding.
+									//3. If the knowledge does not contain the answer, apologize, and let the user know that you will escalate the query to customer support.
+									//4. In your answers, always, respond in a brief and concise manner, ensuring clarity and sufficient detail based on the provided context to address the query effectively.
+									//5. You are one of our team members, so always use (we and us) to foster a sense of collaboration and accessibility.
+									//6. Use the following knowledge in your answer: <guide>${text}</guide>.
+//									  `;
+
+									const systemMessage = `
+									You are a helpful Arabic assistant. Please follow these instructions:
+
+									1. Always greet the user and thank them for reaching out. 
+									2. Ensure the query is clear and complete before searching for an answer. If the question is unclear, politely ask for clarification.
+									3. Use the information in <guide>${text}</guide> to provide precise and context-relevant answers. Avoid using information outside this context.
+									4. If the answer is not available in the provided knowledge, apologize and inform the user that their query will be escalated to customer support.
+									5. Keep your responses concise but detailed enough to address the user's question effectively.
+									6. Always use "we" and "us" to maintain a collaborative and accessible tone.
+									7. Example response: 
+									- User asks: "What are your services?"
+									- Response: "Thank you for reaching out! Our company specializes in providing [specific services from <guide>${text}</guide>]. Let us know if you need further details."
+									`;
+							  
+
+									const prompt = `
+									${systemMessage}
+									User's question: ${messagesToSend}
+									`;
+
+									// Prepare the data payload
+									const data = {
+									model: 'llama3.2-vision:latest', // Replace with your model
+									prompt: prompt,
+									};
+
+									/*
+									//Using chat
+
+									 const chatHistory = [
 										{ role: 'system', content: systemMessage },
 										{ role: 'user', content: messagesToSend },
 										{ role: 'assistant', content: "أنا هنا لخدمتك، تفضل!" },
-									  ];
+									 ];
 								  
-									  //console.log(messagesToSend)
 
 									  const data = {
 										model: 'llama3.2-vision:latest', //'llama3.2-vision:latest'
 										messages: chatHistory,
 									  };
-								  
-									  // Log the data being sent to verify its structure
-									  //console.log('Sending data:', JSON.stringify(data, null, 2));
-								  
+									*/
+
 									  const response = await axios.post(url, data, { headers, timeout: 260000 });
 								  
 									  //console.log('Response status:', response.status);
 									  //console.log('Response data:', response.data);
 								  
 									  const jsonObjects = response.data.split('\n');
-									  let fullContent = jsonObjects
+
+
+									  /*
+									  //This work for chat
+									 let fullContent = jsonObjects
+									 	  .map(item => {
+									 		  item = item.trim();
+									 		  if (!item) return ''; 
+									 		  try {
+									 			  const parsed = JSON.parse(item);
+									 			  return parsed.message ? parsed.message.content : ''; 
+									 		  } catch (error) {
+									 			  console.error('Error parsing JSON item:', error, item); 
+									 			  return ''; 
+									 		  }
+									 	  })
+									 	  .join('');
+										*/
+
+										//this work for 
+										let fullContent = jsonObjects
 										  .map(item => {
 											  item = item.trim();
 											  if (!item) return ''; 
-								  //
 											  try {
 												  const parsed = JSON.parse(item);
-												  return parsed.message ? parsed.message.content : ''; 
+												  return parsed.response ? parsed.response : ''; 
 											  } catch (error) {
 												  console.error('Error parsing JSON item:', error, item); 
 												  return ''; 
 											  }
 										  })
 										  .join('');
-								  //
+
 									  //console.log('Parsed content:', fullContent); 
 									  await sendMessageWTyping({ text: fullContent }, msg.key.remoteJid!)
 									  const senderMobile = msg.key.remoteJid!.split('@')[0]
@@ -416,5 +461,52 @@ You are a helpful Arabic assistant. Please follow these instructions:
 	}
 }
 
+function deleteStoreAndAuth() {
+	const filePath = './alhar6i_store_multi.json';
+	const folderPath = './alhar6i_auth_info';
+  
+	// Check if the file exists and delete it
+	if (existsSync(filePath)) {
+	  try {
+		unlinkSync(filePath);
+		console.log(`Store "${filePath}" deleted successfully.`);
+	  } catch (error) {
+		console.error(`Error deleting store "${filePath}":`, error);
+	  }
+	} else {
+	  console.log(`Store "${filePath}" does not exist.`);
+	}
+  
+	// Check if the folder exists and delete it
+	if (existsSync(folderPath)) {
+	  try {
+		rmSync(folderPath, { recursive: true, force: true });
+		console.log(`Auth "${folderPath}" deleted successfully.`);
+	  } catch (error) {
+		console.error(`Error deleting Auth "${folderPath}":`, error);
+	  }
+	} else {
+	  console.log(`Auth "${folderPath}" does not exist.`);
+	}
+  }
 
 startSock()
+
+
+function askUser() {
+	const rl = readline.createInterface({
+	  input: process.stdin,
+	  output: process.stdout,
+	});
+  
+	rl.question('You are logged out!\nDo you want to run the AI? [Y/N]: ', (answer) => {
+	  if (answer.trim().toLowerCase() === 'y') {
+		console.log('Starting AI...');
+		startSock();
+	  } else {
+		console.log('Exiting...');
+	  }
+	  rl.close(); // Close the readline interface before exiting
+	  process.exit(0); // Exit the terminal
+	});
+  }

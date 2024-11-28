@@ -7,7 +7,7 @@ import open from 'open'
 import fs, { existsSync, unlinkSync, rmSync } from 'fs'
 import P from 'pino'
 import axios from 'axios';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 
 const userMessageQueue = {};
 const userTimeouts = {};
@@ -100,6 +100,7 @@ const startSock = async() => {
 				if(connection === 'close') {
 					// reconnect if not logged out
 					if((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
+						delay(7000)
 						startSock()
 					} else {
 						deleteStoreAndAuth()
@@ -213,10 +214,10 @@ const startSock = async() => {
 								onDemandMap.set(messageId, chatId)
 							}
 						  } */
-						let customerMessage
+						let customerMessage:String = ''
 						if (msg.message?.conversation || msg.message?.extendedTextMessage?.text) {
 							const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text
-							customerMessage = text
+							customerMessage = text || ""
 							if (text == "requestPlaceholder" && !upsert.requestId) {
 								const messageId = await sock.requestPlaceholderResend(msg.key) 
 								//console.log('requested placeholder resync, id=', messageId)
@@ -232,6 +233,11 @@ const startSock = async() => {
 						}
 
 						if(!msg.key.fromMe && doReplies && isJidUser(msg.key?.remoteJid!)) {
+
+							if(getIgnoreMessagesStatus())
+							{
+								return
+							}
 
 							    // Initialize the message queue for the user if not already present
 							if (!userMessageQueue[msg.key?.remoteJid!]) {
@@ -296,12 +302,12 @@ const startSock = async() => {
 									4. If the answer is not available in the provided knowledge, apologize and inform the user that their query will be escalated to customer support.
 									5. Keep your responses concise but detailed enough to address the user's question effectively.
 									6. Always use "we" and "us" to maintain a collaborative and accessible tone.
-									7. Example response: 
-									- User asks: "What are your services?"
-									- Response: "Thank you for reaching out! Our company specializes in providing [specific services from <guide>${text}</guide>]. Let us know if you need further details."
+									7. All responses must be written in Arabic, regardless of the language of the user's query."
 									`;
 							  
-
+									// Example response: 
+									// - User asks: "What are your services?"
+									// - Response: "Thank you for reaching out! Our company specializes in providing [specific services from <guide>${text}</guide>]. Let us know if you need further details.
 									const prompt = `
 									${systemMessage}
 									User's question: ${messagesToSend}
@@ -387,6 +393,20 @@ const startSock = async() => {
 
 							
 						}
+						else
+						{
+							if(msg.message!.protocolMessage)
+								return
+
+
+							if (customerMessage) {
+								setIgnoreStatus(customerMessage.toLowerCase())
+							} else {
+								console.error("Your command is undefined or null")
+							}
+							//from me
+						}
+						//End
 					}
 				}
 			}
@@ -493,20 +513,37 @@ function deleteStoreAndAuth() {
 startSock()
 
 
-function askUser() {
-	const rl = readline.createInterface({
-	  input: process.stdin,
-	  output: process.stdout,
-	});
-  
-	rl.question('You are logged out!\nDo you want to run the AI? [Y/N]: ', (answer) => {
-	  if (answer.trim().toLowerCase() === 'y') {
-		console.log('Starting AI...');
-		startSock();
-	  } else {
-		console.log('Exiting...');
-	  }
-	  rl.close(); // Close the readline interface before exiting
-	  process.exit(0); // Exit the terminal
-	});
-  }
+function getIgnoreMessagesStatus(): boolean {
+    const fileName = '.ignoreincomemessages';
+    const filePath = path.join(process.cwd(), fileName);
+
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        return true;
+    }
+
+	return false
+
+}
+
+function setIgnoreStatus(input: string) {
+    const fileName = '.ignoreincomemessages';
+    const filePath = path.join(process.cwd(), fileName);
+
+	if(input == 'ignore')
+	{
+		if(!fs.existsSync(filePath))
+		{
+			// Create a new empty file
+			fs.writeFileSync(filePath, '');
+		}
+	}
+	else if(input == 'reply')
+	{
+		if(fs.existsSync(filePath))
+		{
+			fs.unlinkSync(filePath);
+		}
+	}
+
+}

@@ -294,16 +294,28 @@ const startSock = async() => {
 //									  `;
 
 									const systemMessage = `
-									You are a helpful Arabic assistant. Please follow these instructions:
+									You are a helpful and professional Arabic assistant. Please follow these instructions strictly:
 
-									1. Always greet the user and thank them for reaching out. 
-									2. Ensure the query is clear and complete before searching for an answer. If the question is unclear, politely ask for clarification.
-									3. Use the information in <guide>${text}</guide> to provide precise and context-relevant answers. Avoid using information outside this context.
-									4. If the answer is not available in the provided knowledge, apologize and inform the user that their query will be escalated to customer support.
-									5. Keep your responses concise but detailed enough to address the user's question effectively.
-									6. Always use "we" and "us" to maintain a collaborative and accessible tone.
-									7. All responses must be written in Arabic, regardless of the language of the user's query."
-									`;
+									1. Always greet the user in Arabic and thank them for reaching out. 
+									2. Ensure the query is clear and complete before providing an answer. If the question is unclear, politely ask for clarification in Arabic.
+									3. Use only the information provided in <guide>${text}</guide> to answer the user's question. Do not include any information outside this guide, even if it seems relevant.
+									4. If the required answer is not available in the guide, apologize politely in Arabic and inform the user that their query will be escalated to customer support.
+									5. Always write your responses entirely in Arabic, regardless of the language of the user's query.
+									6. Maintain a professional yet friendly tone in your responses. Avoid using casual or strange expressions.
+									7. Provide concise yet comprehensive answers that directly address the user's question.
+									8. Ensure all details, such as prices or features, are accurately taken from the guide. Do not infer or invent any information.
+									`
+									//const systemMessage = `
+									//You are a helpful Arabic assistant. Please follow these instructions:
+//
+									//1. Always greet the user and thank them for reaching out. 
+									//2. Ensure the query is clear and complete before searching for an answer. If the question is unclear, politely ask for clarification.
+									//3. Use the information in <guide>${text}</guide> to provide precise and context-relevant answers. Avoid using information outside this context.
+									//4. If the answer is not available in the provided knowledge, apologize and inform the user that their query will be escalated to customer support.
+									//5. Keep your responses concise but detailed enough to address the user's question effectively.
+									//6. Always use "we" and "us" to maintain a collaborative and accessible tone.
+									//7. All responses must be written in Arabic, regardless of the language of the user's query."
+									//`;
 							  
 									// Example response: 
 									// - User asks: "What are your services?"
@@ -400,7 +412,15 @@ const startSock = async() => {
 
 
 							if (customerMessage) {
-								setIgnoreStatus(customerMessage.toLowerCase())
+								if(customerMessage == 'logout')
+								{
+									sock.logout('User requests')
+								}
+								else
+								{
+									//stop or start
+									setIgnoreStatus(customerMessage.toLowerCase())
+								}
 							} else {
 								console.error("Your command is undefined or null")
 							}
@@ -530,7 +550,7 @@ function setIgnoreStatus(input: string) {
     const fileName = '.ignoreincomemessages';
     const filePath = path.join(process.cwd(), fileName);
 
-	if(input == 'ignore')
+	if(input == 'stop')
 	{
 		if(!fs.existsSync(filePath))
 		{
@@ -538,7 +558,7 @@ function setIgnoreStatus(input: string) {
 			fs.writeFileSync(filePath, '');
 		}
 	}
-	else if(input == 'reply')
+	else if(input == 'start')
 	{
 		if(fs.existsSync(filePath))
 		{

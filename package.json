@@ -28,8 +28,8 @@
   "scripts": {
     "build:all": "tsc && typedoc",
     "build:docs": "typedoc",
-    "build:tsc": "tsc && copy src\\data.txt lib\\",
-    "dockerbuild:tsc": "tsc && cp src/data.txt lib/ && rm -rf src",
+    "build:tsc": "tsc && copy src\\data.txt lib\\ && copy src\\data.csv lib\\",
+    "dockerbuild:tsc": "tsc && cp src/data.txt lib/ && cp src/data.csv lib/ && rm -rf src",
     "changelog:last": "conventional-changelog -p angular -r 2",
     "changelog:preview": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",

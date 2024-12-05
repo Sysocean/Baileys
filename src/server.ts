@@ -5,9 +5,13 @@ import makeWASocket, { AnyMessageContent, BinaryInfo, delay, DisconnectReason, d
 //import MAIN_LOGGER from '../src/Utils/logger'
 import open from 'open'
 import fs, { existsSync, unlinkSync, rmSync } from 'fs'
+import { writeFile, readFile } from 'fs/promises';
+
 import P from 'pino'
 import axios from 'axios';
 import path, { resolve } from 'path';
+
+const ACCOUNT_MANAGER = '966503889883'
 
 const userMessageQueue = {};
 const userTimeouts = {};
@@ -234,6 +238,14 @@ const startSock = async() => {
 
 						if(!msg.key.fromMe && doReplies && isJidUser(msg.key?.remoteJid!)) {
 
+							const senderMobile = msg.key.remoteJid!.split('@')[0]
+
+							if (senderMobile == ACCOUNT_MANAGER)
+							{
+								adminTask(customerMessage, true)
+								return
+							}
+
 							if(getIgnoreMessagesStatus())
 							{
 								return
@@ -252,12 +264,10 @@ const startSock = async() => {
 								clearTimeout(userTimeouts[msg.key?.remoteJid!]);
 							}
 
-							//console.log(JSON.stringify(msg, undefined, 2))
-							
 							// Set a new timeout to process the messages after the delay
 							userTimeouts[msg.key?.remoteJid!] = setTimeout(async () => {
 								// Collect all messages for this user
-								const messagesToSend = userMessageQueue[msg.key?.remoteJid!].join('\n');
+								const userQuestion = userMessageQueue[msg.key?.remoteJid!].join('\n');
 								
 								// Clear the user's message queue
 								delete userMessageQueue[msg.key?.remoteJid!];
@@ -293,18 +303,26 @@ const startSock = async() => {
 									//6. Use the following knowledge in your answer: <guide>${text}</guide>.
 //									  `;
 
-									const systemMessage = `
-									You are a helpful and professional Arabic assistant. Please follow these instructions strictly:
+									//const systemMessage = `
+									//You are a helpful and professional Arabic assistant. Please follow these instructions strictly:
+//
+									//1. If the user's query contains a greeting then start your response by greeting the user and thank them for reaching out.
+									//2. Ensure the query is clear and complete before providing an answer. If the question is unclear, politely ask for clarification in Arabic.
+									//3. Use only the information provided in <guide>${text}</guide> to answer the user's question. Do not include any information outside this guide, even if it seems relevant.
+									//4. Answer directly after the greeting without repeating or rephrasing the user's question.
+									//5. Avoid explaining your process or mentioning that you have read the question. Provide the answer succinctly and professionally.
+									//6. If the required answer is not available in the guide, apologize politely in Arabic and inform the user that their query will be escalated to customer support.
+									//7. Always write your responses entirely in Arabic, regardless of the language of the user's query.
+									//8. Maintain a professional yet friendly tone in your responses. Avoid using casual or strange expressions.
+									//9. Provide concise yet comprehensive answers that directly address the user's question.
+									//10. Ensure all details, such as prices or features, are accurately taken from the guide. Do not infer or invent any information.
+									//`
 
-									1. Always greet the user in Arabic and thank them for reaching out. 
-									2. Ensure the query is clear and complete before providing an answer. If the question is unclear, politely ask for clarification in Arabic.
-									3. Use only the information provided in <guide>${text}</guide> to answer the user's question. Do not include any information outside this guide, even if it seems relevant.
-									4. If the required answer is not available in the guide, apologize politely in Arabic and inform the user that their query will be escalated to customer support.
-									5. Always write your responses entirely in Arabic, regardless of the language of the user's query.
-									6. Maintain a professional yet friendly tone in your responses. Avoid using casual or strange expressions.
-									7. Provide concise yet comprehensive answers that directly address the user's question.
-									8. Ensure all details, such as prices or features, are accurately taken from the guide. Do not infer or invent any information.
-									`
+									const systemMessage =`You are a professional Arabic assistant. Start with a greeting if the user greets you, and ensure the query is clear before answering. Use only the information provided in <guide>${text}</guide> without adding external details. Respond concisely without rephrasing or explaining your process. If the answer isn't in the guide, apologize in Arabic and escalate the query. Always respond in Arabic with a professional and friendly tone, providing accurate details directly from the guide without inferring or inventing information. If the question is unrelated to the product or involves religious, sectarian, political, unethical, or sexual topics, politely inform the user that the query is outside the scope of our services and provide a brief, respectful response. Do not engage in discussions on sensitive, inappropriate, or sexual topics.`
+
+									// 
+									
+									
 									//const systemMessage = `
 									//You are a helpful Arabic assistant. Please follow these instructions:
 //
@@ -322,7 +340,7 @@ const startSock = async() => {
 									// - Response: "Thank you for reaching out! Our company specializes in providing [specific services from <guide>${text}</guide>]. Let us know if you need further details.
 									const prompt = `
 									${systemMessage}
-									User's question: ${messagesToSend}
+									User's question: ${userQuestion}
 									`;
 
 									// Prepare the data payload
@@ -336,7 +354,7 @@ const startSock = async() => {
 
 									 const chatHistory = [
 										{ role: 'system', content: systemMessage },
-										{ role: 'user', content: messagesToSend },
+										{ role: 'user', content: userQuestion },
 										{ role: 'assistant', content: "أنا هنا لخدمتك، تفضل!" },
 									 ];
 								  
@@ -389,9 +407,12 @@ const startSock = async() => {
 
 									  //console.log('Parsed content:', fullContent); 
 									  await sendMessageWTyping({ text: fullContent }, msg.key.remoteJid!)
+
+									  appendToCSV(userQuestion, fullContent)
+
 									  const senderMobile = msg.key.remoteJid!.split('@')[0]
 									  const whatsappJID = msg.key.remoteJid!.split('@')[1]
-									  await sendMessageWTyping({ text: 'السؤال: ' + messagesToSend + '\nالجواب: ' + fullContent + '\n' +   senderMobile }, '966503889883@' + whatsappJID)
+									  await sendMessageWTyping({ text: 'السؤال: ' + userQuestion + '\nالجواب: ' + fullContent + '\n' +   senderMobile }, '966503889883@' + whatsappJID)
 
 									} catch (error) {
 									  console.error('Error:', error.message);
@@ -409,22 +430,11 @@ const startSock = async() => {
 						{
 							if(msg.message!.protocolMessage)
 								return
+							
+							adminTask(customerMessage, false)
 
+							return
 
-							if (customerMessage) {
-								if(customerMessage == 'logout')
-								{
-									sock.logout('User requests')
-								}
-								else
-								{
-									//stop or start
-									setIgnoreStatus(customerMessage.toLowerCase())
-								}
-							} else {
-								console.error("Your command is undefined or null")
-							}
-							//from me
 						}
 						//End
 					}
@@ -548,17 +558,19 @@ function getIgnoreMessagesStatus(): boolean {
 
 function setIgnoreStatus(input: string) {
     const fileName = '.ignoreincomemessages';
-    const filePath = path.join(process.cwd(), fileName);
+	const currentDirectory = __dirname;
 
-	if(input == 'stop')
+    const filePath = path.join(currentDirectory, fileName);
+
+	if(input.toLowerCase() == 'stop')
 	{
 		if(!fs.existsSync(filePath))
 		{
-			// Create a new empty file
+			// Create a new empty file 
 			fs.writeFileSync(filePath, '');
 		}
 	}
-	else if(input == 'start')
+	else if(input.toLowerCase() == 'boot')
 	{
 		if(fs.existsSync(filePath))
 		{
@@ -566,4 +578,52 @@ function setIgnoreStatus(input: string) {
 		}
 	}
 
+}
+
+function appendToCSV(firstParam: string, secondParam: string): void {
+    // Get the current directory (where the script is running from)
+    const currentDirectory = __dirname;
+
+    // Construct the file path relative to the current directory
+    const filePath = path.join(currentDirectory, 'data.csv');
+
+    // Prepare the data to append
+    const dataToAppend = `${firstParam || ''},${secondParam || ''}\n`;
+
+    // Append the data to the CSV file
+    fs.appendFile(filePath, dataToAppend, (err) => {
+        if (err) {
+            console.error('Error appending data to CSV file:', err);
+        } else {
+            console.log('Data successfully appended to CSV file.');
+        }
+    });
+}
+
+
+async function adminTask(input: String, superadmin: Boolean): Promise<void> {
+	// Resolve the path dynamically based on the current file's directory
+	const dataFilePath = resolve(__dirname, 'data.txt');
+
+    // Check if the input starts with 'DATA:' and has content after the colon
+    if (input.startsWith('DATA:') && superadmin) {
+        const newText = input.slice(5); // Extract the text after 'DATA:'
+
+        try {
+            // Write the new text to the file
+            await writeFile(dataFilePath, newText, 'utf-8');
+            console.log('File updated successfully');
+        } catch (error) {
+            console.error('Error writing to the file:', error);
+        }
+    } else if (input.startsWith('STOP')) {
+		setIgnoreStatus('STOP')
+		console.log('Stop the service');
+	} else if (input.startsWith('BOOT')) {
+		setIgnoreStatus('BOOT')
+		console.log('Restart the service');
+	}
+	else {
+
+	}
 }

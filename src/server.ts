@@ -48,7 +48,7 @@ const startSock = async() => {
 	const { state, saveCreds } = await useMultiFileAuthState('./alhar6i_auth_info')
 	// fetch latest version of WA Web
 	const { version, isLatest } = await fetchLatestBaileysVersion()
-	console.log(`Using Alhar6i WA v${version.join('.')}, isLatest: ${isLatest}`)
+	console.log(`Using Alhar6i WA v${version.join('.')}, isLatest: ${isLatest} @ ${new Date().toJSON()}`)
 
 	const sock = makeWASocket({
 		version,

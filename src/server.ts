@@ -240,6 +240,14 @@ const startSock = async() => {
 
 							const senderMobile = msg.key.remoteJid!.split('@')[0]
 
+							// Normalize senderMobile by removing leading '+' and '00'
+							const normalizedMobile = senderMobile.replace(/^(\+|00)/, '');
+
+							// Check if the first 3 characters after normalization are not "966"
+							if (!normalizedMobile.startsWith("966")) {
+								return; // Or perform your desired action
+							}
+							
 							if (senderMobile == ACCOUNT_MANAGER)
 							{
 								adminTask(customerMessage, true)
